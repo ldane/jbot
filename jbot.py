@@ -30,21 +30,34 @@ class Juicer(JabberBot):
 
 	def bot_getup( self, mess, args):
 		"""Get upload rate"""
-		return server.get_upload_rate();
+		return server.get_upload_rate()
 	
 	def bot_setup( self, mess, args):
 		"""Set upload rate"""
-		server.set_upload_rate(args+"K");
-		return server.get_upload_rate();
+		server.set_upload_rate(args+"K")
+		return server.get_upload_rate()
 
 	def bot_getdown( self, mess, args):
 		"""Get download rate"""
-		return server.get_download_rate();
+		return server.get_download_rate()
 
 	def bot_setdown( self, mess, args):
 		"""Set download rate"""
-		server.set_download_rate(args+"K");
-		return server.get_download_rate();
+		server.set_download_rate(args+"K")
+		return server.get_download_rate()
+
+	def bot_torrentinfo( self, mess, args):
+		"""Return rtorrent information"""
+		return "[Down:"+`server.get_down_rate()/1024`+"|Up:"+`server.get_up_rate()/1024`+"]"
+
+	def bot_list( self, mess, args):
+		"""Return torrent list"""
+		list=server.download_list("main")
+		mess="Main list\n"
+		for torr in list:
+			perc=(100*server.d.get_completed_chunks(torr))/server.d.get_size_chunks(torr);
+			mess+=server.d.get_name(torr)+"% "+`perc`+"\n"
+		return mess
 
 username = 'wadsox@jabber.org'
 password = 'signomix'
