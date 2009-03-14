@@ -43,7 +43,7 @@ class Juicer(JabberBot):
 
 	def bot_setdown( self, mess, args):
 		"""Set download rate"""
-		server.set_downloa_rate(args+"K");
+		server.set_download_rate(args+"K");
 		return server.get_download_rate();
 
 username = 'wadsox@jabber.org'
