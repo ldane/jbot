@@ -25,13 +25,26 @@ class Juicer(JabberBot):
 		return mess.getFrom()
 	
 	def bot_hello( self, mess, args):
+		"""Hello World"""
 		return 'Hello World!'
 
 	def bot_getup( self, mess, args):
+		"""Get upload rate"""
 		return server.get_upload_rate();
 	
 	def bot_setup( self, mess, args):
-		return server.set_upload_rate(args+"K");
+		"""Set upload rate"""
+		server.set_upload_rate(args+"K");
+		return server.get_upload_rate();
+
+	def bot_getdown( self, mess, args):
+		"""Get download rate"""
+		return server.get_download_rate();
+
+	def bot_setdown( self, mess, args):
+		"""Set download rate"""
+		server.set_downloa_rate(args+"K");
+		return server.get_download_rate();
 
 username = 'wadsox@jabber.org'
 password = 'signomix'
