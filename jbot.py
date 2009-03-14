@@ -28,14 +28,15 @@ class Juicer(JabberBot):
 		return 'Hello World!'
 
 	def bot_getup( self, mess, args):
-		server=xmlrpclib.Server("http://jrtorrent:boxoftorr@localhost/RPC2")
 		return server.get_upload_rate();
 	
 	def bot_setup( self, mess, args):
-		server=xmlrpclib.Server("http://jrtorrent:boxoftorr@localhost/RPC2")
-		return server.set_upload_rate(int(args)/1000000);
+		return server.set_upload_rate(args+"K");
 
 username = 'wadsox@jabber.org'
 password = 'signomix'
+
+server=xmlrpclib.Server("http://jrtorrent:boxoftorr@localhost/RPC2")
+
 bot = Juicer(username,password)
 bot.serve_forever()
