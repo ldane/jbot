@@ -59,6 +59,20 @@ class Juicer(JabberBot):
 			mess+=server.d.get_name(torr)+"% "+`perc`+"\n"
 		return mess
 
+	def bot_stopall( self, mess, args):
+		"""Stop all started torrents"""
+		list=server.download_list("main")
+		for torr in list:
+			server.d.stop(torr)
+		return "Stopped"
+
+	def bot_startall( self, mess, args):
+		"""Stop all started torrents"""
+		list=server.download_list("main")
+		for torr in list:
+			server.d.start(torr)
+		return "Started"
+
 username = 'wadsox@jabber.org'
 password = 'signomix'
 
