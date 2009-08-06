@@ -1,9 +1,17 @@
 #!/usr/bin/python
 
 from jabberbot import JabberBot
+from time import time
+from random import random
+import base64
 import datetime
 import re
-import xmlrpclib
+import xmlrpc2scgi as xs
+import urllib
+import os
+import glob
+import stat
+import shutil
 
 class Juicer(JabberBot):
 	def bot_serverinfo( self, mess, args):
@@ -73,10 +81,48 @@ class Juicer(JabberBot):
 			server.d.start(torr)
 		return "Started"
 
+	def bot_getlink( self, mess, args):
+		"""download link"""
+		url_start = time()
+		urllib.urlretrieve(args,"/shares/torrent/queue/"+base64.b64encode("limon"+str(random()))+".torrent")
+		url_end = time()
+		return "Downloaded %s" % (url_end - url_start)
+	def idle_proc(self):
+		global last_command,recheck_time
+		if ( time() - last_command > recheck_time ):
+			last_command = time()
+			infohashes = server.download_list('incomplete')
+			if (len(infohashes) < max_downloads):
+				download = []
+				for file in glob.glob(queue + '/*.torrent'):
+					download.append((os.stat(file)[stat.ST_MTIME], file))
+				if len(download) > 0:
+					download.sort()
+				if os.path.exists(watch + '/' + str(download[0][1]).split('/')[-1]):
+					self.send("leventdane@gmail.com","%s already exists, deleting from queue folder" % (download[0][1]))
+					os.remove(download[0][1])
+				else:
+					self.send("leventdane@gmail.com","%s -> %s" % (download[0][1], watch))
+					shutil.move(download[0][1], watch)
+		pass
+
+# scgi host and port
+rtorrent_host="scgi://localhost:5000"
+# watch and queue folders
+watch = "/shares/torrent/watch"
+queue = "/shares/torrent/queue"
+# total number of downloads allowed
+max_downloads = 2
+# download rate in kbp/s
+#max_download_rate = 50000
+# how often to recheck to add more (in seconds)
+recheck_time = 60
+
+
 username = 'wadsox@jabber.org'
 password = 'signomix'
-
-server=xmlrpclib.Server("http://jrtorrent:boxoftorr@localhost/RPC2")
+last_command = time();
+server=xs.RTorrentXMLRPCClient(rtorrent_host)
 
 bot = Juicer(username,password)
 bot.serve_forever()
