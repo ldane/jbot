@@ -98,12 +98,12 @@ class Juicer(JabberBot):
 					download.append((os.stat(file)[stat.ST_MTIME], file))
 				if len(download) > 0:
 					download.sort()
-				if os.path.exists(watch + '/' + str(download[0][1]).split('/')[-1]):
-					self.send("leventdane@gmail.com","%s already exists, deleting from queue folder" % (download[0][1]))
-					os.remove(download[0][1])
-				else:
-					self.send("leventdane@gmail.com","%s -> %s" % (download[0][1], watch))
-					shutil.move(download[0][1], watch)
+					if os.path.exists(watch + '/' + str(download[0][1]).split('/')[-1]):
+						self.send("leventdane@gmail.com","%s already exists, deleting from queue folder" % (download[0][1]))
+						os.remove(download[0][1])
+					else:
+						self.send("leventdane@gmail.com","%s -> %s" % (download[0][1], watch))
+						shutil.move(download[0][1], watch)
 		pass
 
 # scgi host and port
