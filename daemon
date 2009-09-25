@@ -1,4 +1,13 @@
 #! /bin/sh
+### BEGIN INIT INFO
+# Provides:          rtorrent
+# Required-Start:       $remote_fs $syslog networking rtorrent
+# Required-Stop:        $remote_fs $syslog networking rtorrent
+# Default-Start:        2 3 4 5
+# Default-Stop:         1
+# Short-Description: Rtorrent Deamon
+# Description:
+### END INIT INFO
 # example python daemon starter script
 # based on skeleton from Debian GNU/Linux
 # cliechti@gmx.net
@@ -6,8 +15,8 @@
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/local/sbin/daemon.py
-NAME=pydaemon
-DESC="Example daemon"
+NAME=jbot
+DESC="Jabber Bot for rtorrent"
 
 test -f $DAEMON || exit 0
 

@@ -2,15 +2,15 @@
 
 ###########################################################################
 # configure these paths:
-LOGFILE = '/var/log/pydaemon.log'
-PIDFILE = '/var/run/pydaemon.pid'
+LOGFILE = '/var/log/jbot.log'
+PIDFILE = '/var/run/jbot.pid'
 
 # and let USERPROG be the main function of your project
-import mymain
-USERPROG = mymain.main
+import jbot
+USERPROG = jbot.main
 ###########################################################################
 
-#based on Jürgen Hermanns http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/66012
+#based on Jurgen Hermanns http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/66012
 import sys, os
 
 class Log:
@@ -25,12 +25,12 @@ class Log:
 
 def main():
     #change to data directory if needed
-    os.chdir("/root/data")
+    os.chdir("/shares/torrent")
     #redirect outputs to a logfile
     sys.stdout = sys.stderr = Log(open(LOGFILE, 'a+'))
     #ensure the that the daemon runs a normal user
-    os.setegid(103)     #set group first "pydaemon"
-    os.seteuid(103)     #set user "pydaemon"
+    os.setegid(61)     #set group first "pydaemon"
+    os.seteuid(107)     #set user "pydaemon"
     #start the user program here:
     USERPROG()
 
