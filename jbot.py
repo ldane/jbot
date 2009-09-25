@@ -12,6 +12,7 @@ import os
 import glob
 import stat
 import shutil
+import sys
 
 class Juicer(JabberBot):
 	def bot_serverinfo( self, mess, args):
@@ -87,12 +88,30 @@ class Juicer(JabberBot):
 		urllib.urlretrieve(args,"/shares/torrent/queue/"+base64.b64encode("limon"+str(random()))+".torrent")
 		url_end = time()
 		return "Downloaded %s" % (url_end - url_start)
+
+	def bot_lsque( self, mess, args):
+		"""list queue"""
+		cnt=0
+		mess=""
+		for root, dirs, files in os.walk('/shares/torrent/queue'):
+			for name in files:
+				filename = os.path.join(root, name)
+				cnt+=1
+				mess+="%d: %s\n" %(cnt,name)
+		if cnt==0:
+			return "Not found any torrent in queue directory."
+		return mess
+	
+	def bot_quit( self, mess, args):
+		"""quit bot"""
+		sys.exit(0)
+
 	def idle_proc(self):
 		global last_command,recheck_time
 		if ( time() - last_command > recheck_time ):
 			last_command = time()
 			infohashes = server.download_list('incomplete')
-			if (len(infohashes) < max_downloads):
+			if (len(infohashes) < max_downloads) or (rtc.get_down_rate() < max_download_rate):
 				download = []
 				for file in glob.glob(queue + '/*.torrent'):
 					download.append((os.stat(file)[stat.ST_MTIME], file))
@@ -114,9 +133,9 @@ queue = "/shares/torrent/queue"
 # total number of downloads allowed
 max_downloads = 2
 # download rate in kbp/s
-#max_download_rate = 50000
+max_download_rate = 50000
 # how often to recheck to add more (in seconds)
-recheck_time = 60
+recheck_time = 600
 
 
 username = 'wadsox@jabber.org'
