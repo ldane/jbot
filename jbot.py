@@ -100,7 +100,7 @@ class Juicer(JabberBot):
 	def bot_getlink( self, mess, args):
 		"""download link"""
 		url_start = time()
-		urllib.urlretrieve(args,"/shares/torrent/queue/"+base64.b64encode("limon"+str(random()))+".torrent")
+		urllib.urlretrieve(args,self.queue+base64.b64encode("limon"+str(random()))+".torrent")
 		url_end = time()
 		return "Downloaded %s" % (url_end - url_start)
 
@@ -108,7 +108,7 @@ class Juicer(JabberBot):
 		"""list queue"""
 		cnt=0
 		mess=""
-		for root, dirs, files in os.walk('/shares/torrent/queue'):
+		for root, dirs, files in os.walk(self.queue):
 			for name in files:
 				filename = os.path.join(root, name)
 				cnt+=1
@@ -124,10 +124,10 @@ class Juicer(JabberBot):
 	def idle_proc(self):
 		if ( time() - self.last_command > self.recheck_time ):
 			self.last_command = time()
-			infohashes = server.download_list('incomplete')
+			infohashes = self.server.download_list('incomplete')
 			if (len(infohashes) < self.max_downloads) or (rtc.get_down_rate() < self.max_download_rate):
 				download = []
-				for file in glob.glob(queue + '/*.torrent'):
+				for file in glob.glob(self.queue + '/*.torrent'):
 					download.append((os.stat(file)[stat.ST_MTIME], file))
 				if len(download) > 0:
 					download.sort()
