@@ -125,7 +125,7 @@ class Juicer(JabberBot):
 		if ( time() - self.last_command > self.recheck_time ):
 			self.last_command = time()
 			infohashes = self.server.download_list('incomplete')
-			if (len(infohashes) < self.max_downloads) or (rtc.get_down_rate() < self.max_download_rate):
+			if (len(infohashes) < self.max_downloads) or (self.server.get_down_rate() < self.max_download_rate):
 				download = []
 				for file in glob.glob(self.queue + '/*.torrent'):
 					download.append((os.stat(file)[stat.ST_MTIME], file))
