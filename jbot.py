@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import jabberbot
 from jabberbot import JabberBot
 from time import time
 from random import random
@@ -15,7 +16,6 @@ import shutil
 import sys
 
 class Juicer(JabberBot):
-
 	# scgi host and port
 	rtorrent_host="scgi://localhost:5000"
 	# watch and queue folders
@@ -30,51 +30,47 @@ class Juicer(JabberBot):
 
 	last_command = 0;
 
-	def bot_serverinfo( self, mess, args):
+	@jabberbot.botcmd
+	def serverinfo( self, mess, args):
 		"""Displays information about the server"""
 		version = open('/proc/version').read().strip()
 		loadavg = open('/proc/loadavg').read().strip()
 		return '%s\n\n%s' % ( version, loadavg, )
 
-	def bot_time( self, mess, args):
+	@jabberbot.botcmd
+	def time( self, mess, args):
 		"""Displays current server time"""
 		return str(datetime.datetime.now())
-	
-	def bot_rot13( self, mess, args):
-		"""Returns passed arguments rot13'ed"""
-		return args.encode('rot13')
-	
-	def bot_whoami( self, mess, args):
-		"""Tells you your username"""
-		return mess.getFrom()
-	
-	def bot_hello( self, mess, args):
-		"""Hello World"""
-		return 'Hello World!'
-
-	def bot_getup( self, mess, args):
+		
+	@jabberbot.botcmd
+	def getup( self, mess, args):
 		"""Get upload rate"""
 		return self.server.get_upload_rate()
 	
-	def bot_setup( self, mess, args):
+	@jabberbot.botcmd
+	def setup( self, mess, args):
 		"""Set upload rate"""
 		self.server.set_upload_rate(args+"K")
 		return self.server.get_upload_rate()
 
-	def bot_getdown( self, mess, args):
+	@jabberbot.botcmd
+	def getdown( self, mess, args):
 		"""Get download rate"""
 		return self.server.get_download_rate()
 
-	def bot_setdown( self, mess, args):
+	@jabberbot.botcmd
+	def setdown( self, mess, args):
 		"""Set download rate"""
 		self.server.set_download_rate(args+"K")
 		return self.server.get_download_rate()
 
-	def bot_torrentinfo( self, mess, args):
+	@jabberbot.botcmd
+	def torrentinfo( self, mess, args):
 		"""Return rtorrent information"""
 		return "[Down:"+`self.server.get_down_rate()/1024`+"|Up:"+`self.server.get_up_rate()/1024`+"]"
 
-	def bot_list( self, mess, args):
+	@jabberbot.botcmd
+	def list( self, mess, args):
 		"""Return torrent list"""
 		list=self.server.download_list("main")
 		mess="Main list\n"
@@ -83,28 +79,32 @@ class Juicer(JabberBot):
 			mess+=self.server.d.get_name(torr)+"% "+`perc`+"\n"
 		return mess
 
-	def bot_stopall( self, mess, args):
+	@jabberbot.botcmd
+	def stopall( self, mess, args):
 		"""Stop all started torrents"""
 		list=self.server.download_list("main")
 		for torr in list:
 			self.server.d.stop(torr)
 		return "Stopped"
 
-	def bot_startall( self, mess, args):
+	@jabberbot.botcmd
+	def startall( self, mess, args):
 		"""Stop all started torrents"""
 		list=self.server.download_list("main")
 		for torr in list:
 			self.server.d.start(torr)
 		return "Started"
 
-	def bot_getlink( self, mess, args):
+	@jabberbot.botcmd
+	def getlink( self, mess, args):
 		"""download link"""
 		url_start = time()
 		urllib.urlretrieve(args,self.queue+base64.b64encode("limon"+str(random()))+".torrent")
 		url_end = time()
 		return "Downloaded %s" % (url_end - url_start)
 
-	def bot_lsque( self, mess, args):
+	@jabberbot.botcmd
+	def lsque( self, mess, args):
 		"""list queue"""
 		cnt=0
 		mess=""
@@ -117,7 +117,8 @@ class Juicer(JabberBot):
 			return "Not found any torrent in queue directory."
 		return mess
 	
-	def bot_quit( self, mess, args):
+	@jabberbot.botcmd
+	def quit( self, mess, args):
 		"""quit bot"""
 		sys.exit(0)
 
