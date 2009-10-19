@@ -74,9 +74,28 @@ class Juicer(JabberBot):
 		"""Return torrent list"""
 		list=self.server.download_list("main")
 		mess="Main list\n"
+		cnt=1
 		for torr in list:
 			perc=(100*self.server.d.get_completed_chunks(torr))/self.server.d.get_size_chunks(torr);
-			mess+=self.server.d.get_name(torr)+"% "+`perc`+"\n"
+			mess+=`cnt`+": "+self.server.d.get_name(torr)+" %"+`perc`+"\n"
+			cnt+=1
+		return mess
+	
+	@jabberbot.botcmd
+	def rm( self, mess, args):
+		"""Erase Torrent"""
+		list=self.server.download_list("main")
+		cnt=1
+		target = int(args)
+		mess="Not Found"
+		for torr in list:
+			if(cnt == target):
+				mess = self.server.d.get_name(torr)
+				if( self.server.d.erase(torr) == 0 ):
+					mess += " deleted."
+				else:
+					mess += " can't deleted."
+			cnt+=1
 		return mess
 
 	@jabberbot.botcmd
@@ -122,6 +141,12 @@ class Juicer(JabberBot):
 		"""quit bot"""
 		sys.exit(0)
 
+	@jabberbot.botcmd
+	def force_move( self, mess, args):
+		"""force move forrent from queue"""
+		self.last_command = 0
+		return "Resetted last command time."
+
 	def idle_proc(self):
 		if ( time() - self.last_command > self.recheck_time ):
 			self.last_command = time()
@@ -133,15 +158,15 @@ class Juicer(JabberBot):
 				if len(download) > 0:
 					download.sort()
 					if os.path.exists(self.watch + '/' + str(download[0][1]).split('/')[-1]):
-						self.send("leventdane@gmail.com","%s already exists, deleting from queue folder" % (download[0][1]))
+						self.send("limon@koli.be","%s already exists, deleting from queue folder" % (download[0][1]))
 						os.remove(download[0][1])
 					else:
-						self.send("leventdane@gmail.com","%s -> %s" % (download[0][1], self.watch))
+						self.send("limon@koli.be","%s -> %s" % (download[0][1], self.watch))
 						shutil.move(download[0][1], self.watch)
 		pass
 
 def main():
-	bot = Juicer("wadsox@jabber.org", "signomix")	
+	bot = Juicer("wadsox@koli.be", "signomix")	
 	bot.last_command = time()
 	bot.server=xs.RTorrentXMLRPCClient(bot.rtorrent_host)
 	bot.serve_forever()
