@@ -10,6 +10,7 @@ import re
 import xmlrpc2scgi as xs
 import urllib
 import os
+import subprocess
 import glob
 import stat
 import shutil
@@ -19,10 +20,10 @@ class Juicer(JabberBot):
 	# scgi host and port
 	rtorrent_host="scgi://localhost:5000"
 	# watch and queue folders
-	watch = "/shares/torrent/watch"
-	queue = "/shares/torrent/queue"
+	watch = "/shares/torrent/.rtorrent/watch"
+	queue = "/shares/torrent/Watch"
 	# total number of downloads allowed
-	max_downloads = 2
+	max_downloads = 1
 	# download rate in kbp/s
 	max_download_rate = 50000
 	# how often to recheck to add more (in seconds)
@@ -131,7 +132,7 @@ class Juicer(JabberBot):
 	def getlink( self, mess, args):
 		"""download link"""
 		url_start = time()
-		urllib.urlretrieve(args,self.queue+base64.b64encode("limon"+str(random()))+".torrent")
+		subprocess.call(["wget", "-P", self.queue, args])
 		url_end = time()
 		return "Downloaded %s" % (url_end - url_start)
 
@@ -164,7 +165,7 @@ class Juicer(JabberBot):
 		if ( time() - self.last_command > self.recheck_time ):
 			self.last_command = time()
 			infohashes = self.server.download_list('incomplete')
-			if (len(infohashes) < self.max_downloads) or (self.server.get_down_rate() < self.max_download_rate):
+			if (len(infohashes) < self.max_downloads): # or (self.server.get_down_rate() < self.max_download_rate): #disabled conserve memory
 				download = []
 				for file in glob.glob(self.queue + '/*.torrent'):
 					download.append((os.stat(file)[stat.ST_MTIME], file))
@@ -175,11 +176,12 @@ class Juicer(JabberBot):
 						os.remove(download[0][1])
 					else:
 						self.send("limon@koli.be","%s -> %s" % (download[0][1], self.watch))
+						#TODO: modify trackers
 						shutil.move(download[0][1], self.watch)
 		pass
 
 def main():
-	bot = Juicer("wadsox@koli.be", "signomix")	
+	bot = Juicer("wadsox@koli.be", "signomix")
 	bot.last_command = time()
 	bot.server=xs.RTorrentXMLRPCClient(bot.rtorrent_host)
 	bot.serve_forever()

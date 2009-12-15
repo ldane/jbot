@@ -1,6 +1,6 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          rtorrent
+# Provides:          	jbot
 # Required-Start:       $remote_fs $syslog networking rtorrent
 # Required-Stop:        $remote_fs $syslog networking rtorrent
 # Default-Start:        2 3 4 5
