@@ -97,8 +97,21 @@ class Juicer(JabberBot):
 					mess += " can't deleted."
 			cnt+=1
 		return mess
-
-	@jabberbot.botcmd
+    
+    @jabberbot.botcmd
+    def rm_comp( self, mess, args):
+        """Remove Completed"""
+        list=self.server.download_list("main")
+        cnt=0
+        for torr in list:
+            if( self.server.d.get_completed_chunks(torr)==self.server.d.get_size_chunks(torr) ):
+				#mess = self.server.d.get_name(torr)
+                if( self.server.d.erase(torr) == 0 ):
+                    #mess += " deleted."
+                    cnt+=1
+        return "%d torrent removed." %(cnt)
+	
+    @jabberbot.botcmd
 	def stopall( self, mess, args):
 		"""Stop all started torrents"""
 		list=self.server.download_list("main")
