@@ -72,9 +72,10 @@ class Juicer(jabberbot.JabberBot):
     @BOTCMD
     def torrentinfo(self, mess, args):
         """Return rtorrent information"""
-        mess = "[Down:"+(self.server.get_down_rate()/1024)
-        mess += "|"
-        mess += "Up:"+(self.server.get_up_rate()/1024)+"]"
+        mess = "[Down: %s | Up: %s" % (
+                self.server.get_down_rate()/1024,
+                self.server.get_up_rate()/1024
+                )
         return 
     
     @BOTCMD
