@@ -86,7 +86,7 @@ class Juicer(jabberbot.JabberBot):
         for torr in torr_list:
             (comp, full) = self.get_compl_rate(torr) 
             perc = (100 * comp) / full
-            mess += cnt+": "+self.server.d.get_name(torr)+" %"+perc+"\n"
+            mess += "%d: %s %%%d \n" % (cnt, self.server.d.get_name(torr), perc)
             cnt += 1
         return mess
 
