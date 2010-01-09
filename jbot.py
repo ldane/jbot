@@ -72,7 +72,7 @@ class Juicer(jabberbot.JabberBot):
     @BOTCMD
     def torrentinfo(self, mess, args):
         """Return rtorrent information"""
-        mess = "[Down: %s | Up: %s" % (
+        mess = "[Down: %s | Up: %s]" % (
                 self.server.get_down_rate()/1024,
                 self.server.get_up_rate()/1024
                 )
@@ -168,7 +168,7 @@ class Juicer(jabberbot.JabberBot):
         """queueing stuffs"""
         if  time() - self.last_command > self.recheck_time :
             self.update_time()
-            if self.reached_max_count() or self.reached_max_down() :
+            if not self.reached_max_count() or not self.reached_max_down() :
                 download = []
                 for torr_file in glob.glob(self.queue + '/*.torrent'):
                     download.append((os.stat(torr_file)[stat.ST_MTIME], file))
