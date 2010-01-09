@@ -84,7 +84,7 @@ class Juicer(jabberbot.JabberBot):
         mess = "Main list\n"
         cnt = 1
         for torr in torr_list:
-            (comp, full) = get_compl_rate(torr) 
+            (comp, full) = self.get_compl_rate(torr) 
             perc = (100 * comp) / full
             mess += cnt+": "+self.server.d.get_name(torr)+" %"+perc+"\n"
             cnt += 1
@@ -113,7 +113,7 @@ class Juicer(jabberbot.JabberBot):
         torr_list = self.server.download_list("main")
         cnt = 0
         for torr in torr_list:
-            (comp, full) = get_compl_rate(torr)
+            (comp, full) = self.get_compl_rate(torr)
             if comp == full:
                 if self.server.d.erase(torr) == 0:
                     cnt += 1
@@ -166,8 +166,8 @@ class Juicer(jabberbot.JabberBot):
     def idle_proc(self):
         """queueing stuffs"""
         if  time() - self.last_command > self.recheck_time :
-            update_time()
-            if reached_max_count() or reached_max_down() :
+            self.update_time()
+            if self.reached_max_count() or self.reached_max_down() :
                 download = []
                 for torr_file in glob.glob(self.queue + '/*.torrent'):
                     download.append((os.stat(torr_file)[stat.ST_MTIME], file))
