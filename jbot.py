@@ -171,7 +171,7 @@ class Juicer(jabberbot.JabberBot):
             if not self.reached_max_count() or not self.reached_max_down() :
                 download = []
                 for torr_file in glob.glob(self.queue + '/*.torrent'):
-                    download.append((os.stat(torr_file)[stat.ST_MTIME], file))
+                    download.append((os.stat(torr_file)[stat.ST_MTIME], torr_file))
                 if len(download) > 0:
                     download.sort()
                 path = self.watch + '/' + str(download[0][1]).split('/')[-1]
