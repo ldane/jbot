@@ -76,7 +76,7 @@ class Juicer(jabberbot.JabberBot):
                 self.server.get_down_rate()/1024,
                 self.server.get_up_rate()/1024
                 )
-        return 
+        return mess 
     
     @BOTCMD
     def list(self, mess, args):
