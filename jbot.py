@@ -203,6 +203,9 @@ class Juicer(jabberbot.JabberBot):
         """Update last command time with now """
         self.last_command = time()
 
+    def shutdown():
+        self.connect()
+
 def main():
     """main"""
     bot = Juicer("wadsox@koli.be", "signomix", "WD MyBook World Edition")
