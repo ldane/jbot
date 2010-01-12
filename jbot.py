@@ -174,11 +174,11 @@ class Juicer(jabberbot.JabberBot):
                     download.append((os.stat(torr_file)[stat.ST_MTIME], torr_file))
                 if len(download) > 0:
                     download.sort()
-                path = self.watch + '/' + str(download[0][1]).split('/')[-1]
-                if os.path.exists(path):
-                    os.remove(download[0][1])
-                else:
-                    shutil.move(download[0][1], self.watch)
+                    path = self.watch + '/' + str(download[0][1]).split('/')[-1]
+                    if os.path.exists(path):
+                        os.remove(download[0][1])
+                    else:
+                        shutil.move(download[0][1], self.watch)
     
     def get_compl_rate(self, torr):
         """Returning complate rate of given torrent"""
