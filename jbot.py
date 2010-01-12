@@ -18,7 +18,7 @@ BOTCMD = jabberbot.botcmd
 class Juicer(jabberbot.JabberBot):
     """Main Class"""
     def __init__(self, jid, password, res=None):
-        super( Juicer, self).__init__( jid, password, res, True)
+        super( Juicer, self).__init__( jid, password, res) #, True)
 
         # scgi host and port
         self.rtorrent_host = "scgi://localhost:5000"
