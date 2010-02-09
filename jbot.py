@@ -28,7 +28,7 @@ class Juicer(jabberbot.JabberBot):
         # total number of downloads allowed
         self.max_downloads = 1
         # download rate in kbp/s
-        self.max_download_rate = 50000
+        self.max_download_rate = 5000
         # how often to recheck to add more (in seconds)
         self.recheck_time = 600
         self.last_command = time()
